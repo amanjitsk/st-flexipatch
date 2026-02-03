@@ -449,8 +449,8 @@ static Shortcut shortcuts[] = {
 	#if ALPHA_PATCH
 	{ TERMMOD,              XK_O,           changealpha,     {.f = +0.05} },
 	{ TERMMOD,              XK_P,           changealpha,     {.f = -0.05} },
-	{ MODKEY,		XK_s,		changealpha,	{.f = -0.05} },
-	{ MODKEY,		XK_a,		changealpha,	{.f = +0.05} },
+	{ MODKEY,		XK_a,		changealpha,	{.f = -0.05} },
+	{ TERMMOD,		XK_A,		changealpha,	{.f = +0.05} },
 	#if ALPHA_FOCUS_HIGHLIGHT_PATCH
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = +0.05} },
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = -0.05} },
@@ -499,7 +499,7 @@ static Shortcut shortcuts[] = {
 	#endif // EXTERNALPIPEIN_PATCH
 	#endif // EXTERNALPIPE_PATCH
 	#if KEYBOARDSELECT_PATCH
-	{ MODKEY,              XK_Escape,      keyboard_select, { 0 } },
+	{ MODKEY,              XK_s,      keyboard_select, { 0 } },
 	#endif // KEYBOARDSELECT_PATCH
 	#if KEYBOARDSELECT_PATCH && REFLOW_PATCH
 	{ MODKEY,              XK_slash,           searchforward,   { 0 } },
