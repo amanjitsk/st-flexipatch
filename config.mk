@@ -28,6 +28,7 @@ LIGATURES_LIBS = `$(PKG_CONFIG) --libs harfbuzz`
 
 # Uncomment this for the SIXEL patch / SIXEL_PATCH
 SIXEL_C = sixel.c sixel_hls.c
+SIXEL_INC = `$(PKG_CONFIG) --cflags imlib2`
 SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
 
 # Uncomment for the netwmicon patch / NETWMICON_PATCH
@@ -37,6 +38,7 @@ SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
 INCS = -I$(X11INC) \
        `$(PKG_CONFIG) --cflags fontconfig` \
        `$(PKG_CONFIG) --cflags freetype2` \
+       $(SIXEL_INC) \
        $(LIGATURES_INC)
 LIBS = -L$(X11LIB) -lm -lX11 -lutil -lXft ${SIXEL_LIBS} ${XRENDER} ${XCURSOR}\
        `$(PKG_CONFIG) --libs fontconfig` \
