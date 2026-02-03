@@ -1486,7 +1486,11 @@ xinit(int cols, int rows)
 		die("could not init fontconfig.\n");
 
 	usedfont = (opt_font == NULL)? font : opt_font;
+	#if DEFAULT_FONTSIZE_PATCH
+	xloadfonts(usedfont, defaultfontsize);
+	#else
 	xloadfonts(usedfont, 0);
+	#endif // DEFAULT_FONTSIZE_PATCH
 
 	#if FONT2_PATCH
 	/* spare fonts */
@@ -4012,6 +4016,13 @@ main(int argc, char *argv[])
 	case 'v':
 		die("%s " VERSION "\n", argv0);
 		break;
+	#if DEFAULT_FONTSIZE_PATCH
+	case 'z':
+	  defaultfontsize = strtod(EARGF(usage()), NULL);
+	  if (!(defaultfontsize > 0))
+	    usage();
+	  break;
+	#endif // DEFAULT_FONTSIZE_PATCH
 	default:
 		usage();
 	} ARGEND;

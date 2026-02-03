@@ -238,8 +238,8 @@ static int ignoreselfg = 1;
 #endif // SELECTION_COLORS_PATCH
 #if KEYBOARDSELECT_PATCH && REFLOW_PATCH
 /* Foreground and background color of search results */
-unsigned int highlightfg = 15;
-unsigned int highlightbg = 160;
+unsigned int highlightfg = 0;
+unsigned int highlightbg = 3;
 #endif // KEYBOARDSELECT_PATCH
 
 #if BLINKING_CURSOR_PATCH
@@ -365,12 +365,18 @@ ResourcePref resources[] = {
  */
 static uint forcemousemod = ShiftMask;
 
+
+/* Internal keyboard shortcuts. */
+#define MODKEY Mod1Mask
+#define TERMMOD (Mod1Mask|ShiftMask)
 /*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release  screen */
+  { TERMMOD,              Button4, zoom,       {.f = +1},      0 },
+  { TERMMOD,              Button5, zoom,       {.f = -1},      0 },
 	#if OPEN_SELECTED_TEXT_PATCH
 	{ ControlMask,          Button2, selopen,        {.i = 0},      1 },
 	#endif // OPEN_SELECTED_TEXT_PATCH
@@ -400,14 +406,14 @@ static MouseShortcut mshortcuts[] = {
 	#endif // SCROLLBACK_MOUSE_ALTSCREEN_PATCH
 };
 
-/* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
-#define TERMMOD (ControlMask|ShiftMask)
-
 #if EXTERNALPIPE_PATCH // example command
-static char *openurlcmd[] = { "/bin/sh", "-c",
-	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
-	"externalpipe", NULL };
+// static char *openurlcmd[] = { "/bin/sh", "-c",
+// 	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
+// 	"externalpipe", NULL };
+
+static char *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -o", "externalpipe", NULL };
+static char *copyurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -c", "externalpipe", NULL };
+static char *copyoutput[] = { "/bin/sh", "-c", "st-copyout", "externalpipe", NULL };
 
 #if EXTERNALPIPEIN_PATCH // example command
 static char *setbgcolorcmd[] = { "/bin/sh", "-c",
@@ -425,11 +431,26 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Prior,       zoom,            {.f = +1} },
 	{ TERMMOD,              XK_Next,        zoom,            {.f = -1} },
 	{ TERMMOD,              XK_Home,        zoomreset,       {.f =  0} },
+	{ ControlMask,          XK_0,        zoomreset,       {.f =  0} },
+	{ ControlMask,          XK_KP_0,        zoomreset,       {.f =  0} },
+	{ TERMMOD,              XK_Up,          zoom,           {.f = +1} },
+	{ TERMMOD,              XK_Down,        zoom,           {.f = -1} },
+	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
+	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
+	{ TERMMOD,              XK_U,           zoom,           {.f = +2} },
+	{ TERMMOD,              XK_D,           zoom,           {.f = -2} },
 	{ TERMMOD,              XK_C,           clipcopy,        {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,       {.i =  0} },
+	{ MODKEY,               XK_c,           clipcopy,       {.i =  0} },
+	{ ShiftMask,            XK_Insert,      clippaste,      {.i =  0} },
+	{ MODKEY,               XK_v,           clippaste,      {.i =  0} },
+	{ MODKEY,               XK_p,           selpaste,       {.i =  0} },
+	{ XK_ANY_MOD,		Button2,	selpaste,	{.i =  0} },
 	#if ALPHA_PATCH
 	{ TERMMOD,              XK_O,           changealpha,     {.f = +0.05} },
 	{ TERMMOD,              XK_P,           changealpha,     {.f = -0.05} },
+	{ MODKEY,		XK_s,		changealpha,	{.f = -0.05} },
+	{ MODKEY,		XK_a,		changealpha,	{.f = +0.05} },
 	#if ALPHA_FOCUS_HIGHLIGHT_PATCH
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = +0.05} },
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = -0.05} },
@@ -442,6 +463,14 @@ static Shortcut shortcuts[] = {
 	#if SCROLLBACK_PATCH || REFLOW_PATCH
 	{ ShiftMask,            XK_Page_Up,     kscrollup,       {.i = -1}, S_PRI },
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,     {.i = -1}, S_PRI },
+	{ MODKEY,               XK_Page_Up,     kscrollup,      {.i = -1}, S_PRI },
+	{ MODKEY,               XK_Page_Down,   kscrolldown,    {.i = -1}, S_PRI },
+	{ MODKEY,               XK_k,           kscrollup,      {.i =  1}, S_PRI },
+	{ MODKEY,               XK_j,           kscrolldown,    {.i =  1}, S_PRI },
+	{ MODKEY,               XK_Up,          kscrollup,      {.i =  1}, S_PRI },
+	{ MODKEY,               XK_Down,        kscrolldown,    {.i =  1}, S_PRI },
+	{ MODKEY,               XK_u,           kscrollup,      {.i = -1}, S_PRI },
+	{ MODKEY,               XK_d,           kscrolldown,    {.i = -1}, S_PRI },
 	#endif // SCROLLBACK_PATCH || REFLOW_PATCH
 	#if CLIPBOARD_PATCH
 	{ TERMMOD,              XK_Y,           clippaste,       {.i =  0} },
@@ -461,17 +490,20 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Return,      newterm,         {.i =  0} },
 	#endif // NEWTERM_PATCH
 	#if EXTERNALPIPE_PATCH
-	{ TERMMOD,              XK_U,           externalpipe,    { .v = openurlcmd } },
+	// { TERMMOD,              XK_U,           externalpipe,    { .v = openurlcmd } },
+	{ MODKEY,               XK_l,           externalpipe,   {.v = openurlcmd } },
+	{ MODKEY,               XK_y,           externalpipe,   {.v = copyurlcmd } },
+	{ MODKEY,               XK_o,           externalpipe,   {.v = copyoutput } },
 	#if EXTERNALPIPEIN_PATCH
 	{ TERMMOD,              XK_M,           externalpipein,  { .v = setbgcolorcmd } },
 	#endif // EXTERNALPIPEIN_PATCH
 	#endif // EXTERNALPIPE_PATCH
 	#if KEYBOARDSELECT_PATCH
-	{ TERMMOD,              XK_Escape,      keyboard_select, { 0 } },
+	{ MODKEY,              XK_Escape,      keyboard_select, { 0 } },
 	#endif // KEYBOARDSELECT_PATCH
 	#if KEYBOARDSELECT_PATCH && REFLOW_PATCH
-	{ TERMMOD,              XK_F,           searchforward,   { 0 } },
-	{ TERMMOD,              XK_B,           searchbackward,  { 0 } },
+	{ MODKEY,              XK_slash,           searchforward,   { 0 } },
+	{ TERMMOD,            XK_question,        searchbackward,  { 0 } },
 	#endif // KEYBOARDSELECT_PATCH
 	#if ISO14755_PATCH
 	{ TERMMOD,              XK_I,           iso14755,        {.i =  0} },
