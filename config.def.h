@@ -481,7 +481,7 @@ static Shortcut shortcuts[] = {
 	#endif // CLIPBOARD_PATCH
 	{ TERMMOD,              XK_Num_Lock,    numlock,         {.i =  0} },
 	#if COPYURL_PATCH || COPYURL_HIGHLIGHT_SELECTED_URLS_PATCH
-	{ MODKEY,               XK_l,           copyurl,         {.i =  0} },
+	{ TERMMOD,               XK_L,           copyurl,         {.i =  0} },
 	#endif // COPYURL_PATCH
 	#if OPENCOPIED_PATCH
 	{ MODKEY,               XK_o,           opencopied,      {.v = "xdg-open"} },
