@@ -378,7 +378,7 @@ static MouseShortcut mshortcuts[] = {
   { TERMMOD,              Button4, zoom,       {.f = +1},      0 },
   { TERMMOD,              Button5, zoom,       {.f = -1},      0 },
 	#if OPEN_SELECTED_TEXT_PATCH
-	{ ControlMask,          Button2, selopen,        {.i = 0},      1 },
+	{ ShiftMask,            Button2, selopen,        {.i = 0},      1 },
 	#endif // OPEN_SELECTED_TEXT_PATCH
 	#if CLIPBOARD_PATCH
 	{ XK_ANY_MOD,           Button2, clippaste,      {.i = 0},      1 },
@@ -487,7 +487,7 @@ static Shortcut shortcuts[] = {
 	{ MODKEY,               XK_o,           opencopied,      {.v = "xdg-open"} },
 	#endif // OPENCOPIED_PATCH
 	#if NEWTERM_PATCH
-	{ TERMMOD,              XK_Return,      newterm,         {.i =  0} },
+	{ MODKEY,              XK_Return,      newterm,         {.i =  0} },
 	#endif // NEWTERM_PATCH
 	#if EXTERNALPIPE_PATCH
 	// { TERMMOD,              XK_U,           externalpipe,    { .v = openurlcmd } },

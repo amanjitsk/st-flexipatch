@@ -300,7 +300,7 @@
  * same CWD (current working directory) as the original st instance.
  * https://st.suckless.org/patches/newterm/
  */
-#define NEWTERM_PATCH 0
+#define NEWTERM_PATCH 1
 
 /* This patch will set the _MOTIF_WM_HINTS property for the st window which, if the window manager
  * respects it, will show the st window without window decorations.
@@ -318,7 +318,7 @@
 /* Open the selected text using xdg-open.
  * https://st.suckless.org/patches/open_selected_text/
  */
-#define OPEN_SELECTED_TEXT_PATCH 0
+#define OPEN_SELECTED_TEXT_PATCH 1
 
 /* This patch allows for URLs to be opened directly when you click on them. This may not work with
  * all terminal applications.
